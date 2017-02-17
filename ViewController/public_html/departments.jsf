@@ -1,0 +1,117 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+      
+
+    <f:view contentType="text/html">
+        <h:head>
+            <f:facet name="first">
+                <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+                <title>PrimeFaces</title>
+            </f:facet>
+        </h:head>
+
+        <h:body>
+        
+            <p:commandButton value="New" actionListener="#{departmentsView.prepareCreate}"
+                oncomplete="PF('departmentDialogNew').show()" icon="ui-icon-plus" title="View" />
+            <p:tooltip />
+            
+            <h:form id="form">
+                <h:panelGroup id="messages">
+                    <p:messages severity="error" showDetail="true" closable="true"/>
+                    <p:growl severity="info, warn" showDetail="true"  life="2000" rendered="#{not facesContext.validationFailed}"/>
+                 </h:panelGroup>                
+                <p:dataTable id="dataTableDepartments" var="department" value="#{departmentsView.items}"
+                    paginator="true" rowKey="#{item.departmentId}" rows="10" rowsPerPageTemplate="10,20,30,40,50">
+                    <p:column headerText="Id">
+                        <h:outputText value="#{department.department_id}" />
+                    </p:column>
+                 
+                    <p:column headerText="Name">
+                        <h:outputText value="#{department.department_name}" />
+                    </p:column>
+                 
+                    <p:column headerText="Location">
+                        <h:outputText value="#{department.location_id}" />
+                    </p:column>
+                 
+                    <p:column headerText="Manager">
+                        <h:outputText value="#{department.manager_id}" />
+                    </p:column>                    
+                    
+                    <p:column headerText="Options">
+                        <p:commandButton value="Edit" update="@([id$=dataTableDepartments],[id$=messages], [id$=panelEdit])"
+                            oncomplete="PF('departmentDialogEdit').show()" icon="ui-icon-pencil" title="Edit">                            
+                            <f:setPropertyActionListener value="#{department}" target="#{departmentsView.selected}" />
+                        </p:commandButton>
+                        <p:commandButton value="Delete" action="#{departmentsView.delete}" update="@([id$=dataTableDepartments],[id$=messages])"
+                             title="Delete" icon="ui-icon-trash">
+                            <p:confirm header="Confirmation" message="Are you sure?"/>
+                            <f:setPropertyActionListener value="#{department}" target="#{departmentsView.selected}" />
+                        </p:commandButton>
+                        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                            <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                            <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                        </p:confirmDialog>
+                    </p:column>                
+                </p:dataTable>   
+            </h:form>
+            <h:form>
+                <p:dialog header="New Department" widgetVar="departmentDialogNew" modal="true" showEffect="fade" 
+                    hideEffect="fade" resizable="false">                
+                    <p:outputPanel style="text-align:center;">                
+                        <p:panelGrid id="panelNew" columns="2" columnClasses="label,value">                    
+                            <h:outputText value="Id:" />
+                            <h:inputText value="#{departmentsView.selected.department_id}" />
+                            
+                            <h:outputText value="Name" />
+                            <h:inputText value="#{departmentsView.selected.department_name}" />
+                            
+                            <h:outputText value="Location:" />
+                            <h:inputText value="#{departmentsView.selected.location_id}" />
+                            
+                            <h:outputText value="Manager:" />
+                            <h:inputText value="#{departmentsView.selected.manager_id}" />
+                        </p:panelGrid>
+                        
+                        <p:commandButton value="Persist" update="@([id$=dataTableDepartments],[id$=messages])" process="@form"
+                            oncomplete="PF('departmentDialogNew').hide();" action="#{departmentsView.save}" />
+                        <p:commandButton value="cancel" update="panelNew" process="@this" onclick="PF('departmentDialogNew').hide();" >
+                            <p:resetInput target="panelNew" />
+                        </p:commandButton>
+                    </p:outputPanel>
+                
+                </p:dialog>
+            </h:form>
+            
+            <p:dialog header="Edit Department" widgetVar="departmentDialogEdit" modal="true" showEffect="fade" 
+                    hideEffect="fade" resizable="false">
+                <h:form>
+                    <h:panelGroup id="display" style="text-align:center;">                                 
+                        <p:panelGrid id="panelEdit" columns="2" columnClasses="label,value">                    
+                            <h:outputText value="Id:" />
+                            <h:inputText value="#{departmentsView.selected.department_id}" />
+                            
+                            <h:outputText value="Name" />
+                            <h:inputText value="#{departmentsView.selected.department_name}" />
+                            
+                            <h:outputText value="Location:" />
+                            <h:inputText value="#{departmentsView.selected.location_id}" />
+                            
+                            <h:outputText value="Manager:" />
+                            <h:inputText value="#{departmentsView.selected.manager_id}" />
+                        </p:panelGrid>
+                        
+                        <p:commandButton value="Persist" update="@([id$=dataTableDepartments],[id$=messages])" process="@form"
+                            oncomplete="PF('departmentDialogEdit').hide();" action="#{departmentsView.edit}"  />
+                        <p:commandButton value="cancel" update="panelEdit" onclick="PF('departmentDialogEdit').hide();" />
+                    </h:panelGroup>
+                </h:form>
+            </p:dialog>            
+        </h:body>
+    </f:view>
+</html>

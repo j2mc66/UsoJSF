@@ -1,0 +1,58 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<SDM>
+   <OverallProperties
+      id="OverallProperties1">
+      <property
+         name="x">88.01758</property>
+      <property
+         name="y">286.87646</property>
+   </OverallProperties>
+   <Page
+      id="Page2">
+      <property
+         name="jspName">/login.jsf</property>
+      <property
+         name="x">88.01758</property>
+      <property
+         name="start">true</property>
+      <property
+         name="y">117.42236</property>
+      <property
+         name="wildcard">false</property>
+   </Page>
+   <NavigationCase
+      islink="true"
+      id="NavigationCase3"
+      from="Page2"
+      to="Page2">
+      <property
+         name="description">Navigation Case</property>
+      <property
+         name="fromOutcome">failure</property>
+      <property
+         name="sdm:polyPoints">T44,84.51758,63.422363,91.51758,63.422363,T56</property>
+   </NavigationCase>
+   <Page
+      id="Page4">
+      <property
+         name="jspName">/admin.jsf</property>
+      <property
+         name="x">246.53516</property>
+      <property
+         name="y">83.5</property>
+      <property
+         name="wildcard">false</property>
+   </Page>
+   <NavigationCase
+      islink="true"
+      id="NavigationCase5"
+      from="Page2"
+      to="Page4">
+      <property
+         name="description">Navigation Case</property>
+      <property
+         name="fromOutcome">success</property>
+      <property
+         name="sdm:polyPoints">R50,129.01758,117.42236,205.53516,83.149414,L50</property>
+   </NavigationCase>
+</SDM>

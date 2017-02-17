@@ -1,0 +1,196 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+      
+
+    <f:view contentType="text/html">
+        <h:head>
+            <f:facet name="first">
+                <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+                <title>PrimeFaces</title>
+            </f:facet>
+        </h:head>
+
+        <h:body>
+            <p:commandButton value="New" oncomplete="PF('employeesDialogNew').show()" icon="ui-icon-plus" title="View" />
+            <p:tooltip />            
+            
+            <h:form id="form">
+                <h:panelGroup id="messages">
+                    <p:messages severity="error" showDetail="true" closable="true"/>
+                    <p:growl severity="info, warn" showDetail="true"  life="2000" rendered="#{not facesContext.validationFailed}"/>
+                 </h:panelGroup>                
+                <p:dataTable id="dataTableEmployees" var="employee" value="#{employeesView.employees}">
+                    <p:column headerText="Id">
+                        <h:outputText value="#{employee.employee_id}" />
+                    </p:column>
+                 
+                    <p:column headerText="First Name">
+                        <h:outputText value="#{employee.first_name}" />
+                    </p:column>
+                 
+                    <p:column headerText="Last Name">
+                        <h:outputText value="#{employee.last_name}" />
+                    </p:column>
+                    
+                    <p:column headerText="Hire Date">
+                        <h:outputText value="#{employee.hire_date}" />
+                    </p:column>
+                    
+                    <p:column headerText="Phone Number">
+                        <h:outputText value="#{employee.phone_number}" />
+                    </p:column> 
+                    
+                    <p:column headerText="Job">
+                        <h:outputText value="#{employee.job_id}" />
+                    </p:column>manager_id
+                    
+                    <p:column headerText="Manager">
+                        <h:outputText value="#{employee.manager_id}" />
+                    </p:column>
+                    
+                    <p:column headerText="Salary">
+                        <h:outputText value="#{employee.salary}" />
+                    </p:column>
+                    
+                    <p:column headerText="Department">
+                        <h:outputText value="#{employee.departments.department_name}" />
+                    </p:column>
+                    
+                    <p:column headerText="Options">
+                        <p:commandButton value="Edit" update="@([id$=dataTableEmployees],[id$=messages], [id$=panelEdit])"
+                            oncomplete="PF('employeesDialogEdit').show()" icon="ui-icon-edit" title="Edit">                            
+                            <f:setPropertyActionListener value="#{employee}" target="#{employeesView.employeesSelected}" />
+                        </p:commandButton>
+                        <p:commandButton value="Delete" action="#{employeesView.delete}" update="@([id$=dataTableEmployees],[id$=messages])"
+                             title="Delete">
+                            <p:confirm header="Confirmation" message="Are you sure?" icon="ui-icon-alert" />
+                            <f:setPropertyActionListener value="#{employee}" target="#{employeesView.employeesSelected}" />
+                        </p:commandButton>
+                        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                            <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                            <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                        </p:confirmDialog>
+                     </p:column>             
+                </p:dataTable>   
+            </h:form>
+            
+            <h:form>
+                <p:dialog header="New Employee" widgetVar="employeesDialogNew" modal="true" showEffect="fade" 
+                    hideEffect="fade" resizable="false">                
+                    <p:outputPanel style="text-align:center;">                
+                        <p:panelGrid id="panelNew" columns="2" columnClasses="label,value">                    
+                            
+                            <h:outputText value="Id:" />                            
+                            <h:inputText value="#{employeesView.employeesNew.employee_id}" />
+                 
+                            <h:outputText value="First Name"/>
+                            <h:inputText value="#{employeesView.employeesNew.first_name}" />
+                                     
+                            <h:outputText value="Last Name"/>
+                            <h:inputText value="#{employeesView.employeesNew.last_name}" />
+                            
+                            <h:outputText value="Email"/>
+                            <h:inputText value="#{employeesView.employeesNew.email}" /> 
+                    
+                            <h:outputText value="Hire Date"/>
+                            <p:calendar id="date" value="#{employeesView.employeesNew.hire_date}"  />                                             
+                    
+                            <h:outputText value="Phone Number"/>
+                            <h:inputText value="#{employeesView.employeesNew.phone_number}" />                    
+                    
+                            <h:outputText value="Job"/>
+                            <h:inputText value="#{employeesView.employeesNew.job_id}" />
+                    
+                            <h:outputText value="Manager"/>
+                            <h:inputText value="#{employeesView.employeesNew.manager_id}" />
+                            
+                            <h:outputText value="Commission pct"/>
+                            <h:inputText value="#{employeesView.employeesNew.commission_pct}" />
+                    
+                            <h:outputText value="Salary"/>
+                            <h:inputText value="#{employeesView.employeesNew.salary}" />
+                    
+                            <h:outputText value="Department"/>
+                            <h:selectOneMenu value="#{employeesView.selectedDepartment}" id="cbxDepartments">
+                                    <f:selectItem itemLabel="Select..." itemValue="" noSelectionOption="true" />
+                                    <f:selectItems value="#{employeesView.departments}" var="varDepartment"
+                                            itemLabel="#{varDepartment.department_name}"></f:selectItems>
+                                    <f:converter converterId="selectOneConvertEntity"></f:converter>									
+                            </h:selectOneMenu>                                                
+                        </p:panelGrid>
+                        
+                        <p:commandButton value="Persist" update="@([id$=dataTableEmployees],[id$=messages])" process="@form"
+                            oncomplete="PF('employeesDialogNew').hide();" action="#{employeesView.save}" >
+                            <p:resetInput target="panelNew" />
+                        </p:commandButton>
+                        <p:commandButton value="cancel" update="panelNew" process="@this" onclick="PF('employeeDialogNew').hide();" >
+                            <p:resetInput target="panelNew" />
+                        </p:commandButton>
+                    </p:outputPanel>                
+                </p:dialog>
+            </h:form>
+            <h:form>
+                <p:dialog header="Edit Employee" widgetVar="employeesDialogEdit" modal="true" showEffect="fade" 
+                    hideEffect="fade" resizable="false">                
+                    <p:outputPanel style="text-align:center;">                
+                        <p:panelGrid id="panelEdit" columns="2" columnClasses="label,value">                    
+                            
+                            <h:outputText value="Id:" />                            
+                            <h:inputText value="#{employeesView.employeesSelected.employee_id}" />
+                 
+                            <h:outputText value="First Name"/>
+                            <h:inputText value="#{employeesView.employeesSelected.first_name}" />
+                                     
+                            <h:outputText value="Last Name"/>
+                            <h:inputText value="#{employeesView.employeesSelected.last_name}" />
+                            
+                            <h:outputText value="Email"/>
+                            <h:inputText value="#{employeesView.employeesSelected.email}" /> 
+                    
+                            <h:outputText value="Hire Date"/>
+                            <p:calendar id="date" value="#{employeesView.employeesSelected.hire_date}"  />                                             
+                    
+                            <h:outputText value="Phone Number"/>
+                            <h:inputText value="#{employeesView.employeesSelected.phone_number}" />                    
+                    
+                            <h:outputText value="Job"/>
+                            <h:inputText value="#{employeesView.employeesSelected.job_id}" />
+                    
+                            <h:outputText value="Manager"/>
+                            <h:inputText value="#{employeesView.employeesSelected.manager_id}" />
+                            
+                            <h:outputText value="Commission pct"/>
+                            <h:inputText value="#{employeesView.employeesSelected.commission_pct}" />
+                    
+                            <h:outputText value="Salary"/>
+                            <h:inputText value="#{employeesView.employeesSelected.salary}" />
+                            
+                            <h:outputText value="Department"/>
+                            <h:selectOneMenu value="#{employeesView.selectedDepartment}" id="cbxDepartments" 
+                                required="true" >
+                                    <f:selectItem itemLabel="#{employeesView.employeesSelected.departments.department_name}" itemValue="" />   
+                                    
+                                    <f:selectItems value="#{employeesView.departmentsSelectOneMenu}" var="varDepartment"
+                                            itemLabel="#{varDepartment.department_name}"></f:selectItems>
+                                    <f:converter converterId="selectOneConvertEntity"></f:converter>                                    
+                            </h:selectOneMenu>
+                                                
+                        </p:panelGrid>
+                        
+                        <p:commandButton value="Persist" update="@([id$=dataTableEmployees],[id$=messages])" process="@form"
+                            oncomplete="PF('employeesDialogEdit').hide();" action="#{employeesView.edit}" >
+                            <p:resetInput target="panelEdit" />
+                        </p:commandButton>
+                        <p:commandButton value="cancel" update="panelEdit" process="@this" onclick="PF('employeeDialogEdit').hide();" >
+                            <p:resetInput target="panelEdit" />
+                        </p:commandButton>
+                    </p:outputPanel>                
+                </p:dialog>
+            </h:form>
+        </h:body>
+    </f:view>
+</html>
